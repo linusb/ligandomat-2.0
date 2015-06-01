@@ -2,6 +2,7 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy import func, distinct, String
 import simplejson as json
+import pyopenms as oms
 
 from ligando.models import (
     DBSession,
@@ -288,19 +289,34 @@ def peptide_page(request):
         query = query.group_by(Protein.name)
         proteins = json.dumps(query.all())
 
-        query = DBSession.query(Source.patient_id)
+        query = DBSession.query(Source.patient_id, Source.source_id)
         query = query.join(SpectrumHit)
         query = query.join(MsRun)
-        query = query.filter(MsRun.flag_trash ==0)
+        #query = query.group_concat(MsRun)
+        query = query.filter(MsRun.flag_trash == 0)
         query = query.filter(SpectrumHit.sequence == request.matchdict["peptide"])
         query = query.group_by(Source.patient_id)
-        sources = js_list_creator_dataTables(query.all())
-
+        sources = json.dumps(query.all())
 
     except:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {"proteins": proteins, "sources": sources,
             "peptide": request.matchdict["peptide"]}
+
+
+# @view_config(route_name='peptide', renderer='../templates/base_templates/peptide.pt', request_method="GET")
+@view_config(route_name='peptide_ajax', renderer='json', request_method="GET")
+def specs(self):
+    mi = "/home/walzer/ms-tools/UWPR-Lorikeet-742d110/140606_SW_MM1S_Pre#3_W_Adjusted#2_20%_Rep#5_25cm90min3s_msms70_indexed.mzML"
+    si = 123
+    imf_skip = oms.IndexedMzMLFile()
+    imf_skip.setSkipXMLChecks(True)
+    imf_skip.openFile(mi)
+    if imf_skip.getParsingSuccess():
+	    p = imf_skip.getSpectrumById(si);
+	    mz = p.getMZArray()
+	    inte = p.getIntensityArray()
+    return {'sequence': 'AAAVPRAAF', 'peaks': zip(mz, inte)}
 
 
 @view_config(route_name='histology', renderer='../templates/base_templates/histology.pt', request_method="GET")

@@ -11,9 +11,14 @@
     <h1 style="text-align: center" id="title"></h1>
     <div style="float: right;">
         <table class="info_table" id="sources" style="float: right" width="480px">
-            <thead><tr><td>Source</td></tr></thead>
+            <thead>
+                <tr>
+                    <td>Source</td>
+                    <td>Spectra</td>
+                </tr>
+            </thead>
             <tbody>
-            <tr><td></td></tr>
+            <tr><td></td><td></td></tr>
             </tbody>
         </table>
          </div>
@@ -29,6 +34,14 @@
     </div>
 <br>
 
+<script src="${request.static_url('ligando:static/js/jquery.flot.js')}"></script>
+<script src="${request.static_url('ligando:static/js/jquery.flot.selection.js')}"></script>
+<script src="${request.static_url('ligando:static/js/specview.js')}"></script>
+<script src="${request.static_url('ligando:static/js/peptide.js')}"></script>
+<script src="${request.static_url('ligando:static/js/aminoacid.js')}"></script>
+<script src="${request.static_url('ligando:static/js/ion.js')}"></script>
+<link REL="stylesheet" TYPE="text/css" HREF="${request.static_url('ligando:static/css/lorikeet.css')}">
+
 <script>
 
 
@@ -36,6 +49,7 @@ $(document).ready(function() {
     // Setting the title
     document.getElementById("title").innerHTML = "${peptide}";
 });
+
 $(document).ready(function() {
 // create dataTable
     $('#proteins').dataTable( {
@@ -46,12 +60,11 @@ $(document).ready(function() {
         data: ${proteins},
         columns: [
             {data: "protein",
-                "render": function ( data, type, row ) {
+             "render": function ( data, type, row ) {
                 return "<a class='nostylelink'  href= '/protein/"+data + "'>"+data + "</a>" ;
-            }},
+             }},
             {data: "gene_name"}
         ]
-    } );
     } );
 
     $('#sources').dataTable( {
@@ -61,14 +74,52 @@ $(document).ready(function() {
     searching: false,
         data: ${sources},
         columns: [
-            {"render": function ( data, type, row ) {
-                return "<a class='nostylelink'  href= '/source/"+data + "'>"+data + "</a>" ;
+            { data: "patient_id" ,
+            "render": function ( data, type, row ) {
+                return "<a class='nostylelink'  href= '/source_id/"+data + "'>"+data + "</a>" ;
+            }},
+            { data: "patient_id" ,
+            "render": function ( data, type, row ) {
+                return "<input id='clickMe' type='button' value='spectra'></input>";
             }}
         ]
     } );
+} );
+
+$(document).ready(function() {
+    document.getElementById("clickMe").onclick = function () { alert('hello!'); };
+});
+$(document).ready(function() {
+    document.getElementById("test2_id").onclick = function () { alert('hello!'); };
+});
+
+
+function spectrumCall(vari) {
+    var request = $.ajax({
+        url: "/peptide_ajax/" + '123',
+        type: "GET",
+        dataType: "json"
+    });
+
+    request.done(function(msg) {
+        console.log(msg);
+        //$("#doener").html(vari);
+        $("#doener").specview(msg);
+    });
+
+    request.fail(function(jqXHR, textStatus) {
+        alert( "Request failed: " + textStatus );
+    });
+}
+
 </script>
 
+<input id='test_id' type='button' value='test1' onclick="alert('hello!');"/>
+<input id='test2_id' type='button' value='test2'/>
+<input id='test3_id' type='button' value='test3' onclick="spectrumCall('whoa')"/>
 
+<br />The following div:<br />
+<div id="doener">this shall be updated</div>
 
 </body>
 
