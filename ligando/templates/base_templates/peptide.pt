@@ -16,7 +16,7 @@
 
 <body>
 <div class="main_wrapper">
-<div class="wrapper">
+  <div class="wrapper">
     <h1 style="text-align: center" id="title"></h1>
     <div style="float: right;">
         <table class="info_table" id="sources" style="float: right" width="480px">
@@ -30,17 +30,22 @@
             <tr><td></td><td></td></tr>
             </tbody>
         </table>
-         </div>
+     </div>
      <div style="float: left;">
-        <table class="info_table" id="proteins" style="float: right" width="480px">
+        <table class="info_table" id="proteins" style="float: right" width="700px">
             <thead><tr><td>Proteins</td><td>Gene Name</td></tr></thead>
             <tbody>
             <tr><td></td><td></td></tr>
             </tbody>
         </table>
-         </div>
-    </div>
-    </div>
+     </div>
+     <div  style="float: left;">
+         <div id="pizza">this shall be updated</div>
+     </div>
+  </div>
+</div>
+
+
 <br>
 
 <script>
@@ -104,8 +109,13 @@ function spectrumCall(vari) {
         console.log(msg);
         //$("#doener").html(vari);
         msg.fileName = vari.toString();
-        $("#doener").html("");
-        $("#doener").specview(msg);
+        msg.width = 450;
+        msg.height = 450;
+        msg.showOptionsTable = false;
+        msg.showViewingOptions = true;
+        msg.showIonTable = false;
+        $("#pizza").html("");
+        $("#pizza").specview(msg);
     });
 
     request.fail(function(jqXHR, textStatus) {
@@ -119,8 +129,7 @@ function spectrumCall(vari) {
 <input id='test2_id' type='button' value='test2'/>
 <input id='test3_id' type='button' value='test3' onclick="spectrumCall('whoa')"/>
 
-<br />The following div:<br />
-<div id="doener">this shall be updated</div>
+
 
 </body>
 
