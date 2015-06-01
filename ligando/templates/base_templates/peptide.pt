@@ -3,6 +3,15 @@
 <!DOCTYPE html>
 <html lang="${request.locale_name}">
 <head>
+
+<script src="${request.static_url('ligando:static/js/jquery.flot.js')}"></script>
+<script src="${request.static_url('ligando:static/js/jquery.flot.selection.js')}"></script>
+<script src="${request.static_url('ligando:static/js/specview.js')}"></script>
+<script src="${request.static_url('ligando:static/js/peptide.js')}"></script>
+<script src="${request.static_url('ligando:static/js/aminoacid.js')}"></script>
+<script src="${request.static_url('ligando:static/js/ion.js')}"></script>
+<link REL="stylesheet" TYPE="text/css" HREF="${request.static_url('ligando:static/css/lorikeet.css')}">
+
 </head>
 
 <body>
@@ -33,14 +42,6 @@
     </div>
     </div>
 <br>
-
-<script src="${request.static_url('ligando:static/js/jquery.flot.js')}"></script>
-<script src="${request.static_url('ligando:static/js/jquery.flot.selection.js')}"></script>
-<script src="${request.static_url('ligando:static/js/specview.js')}"></script>
-<script src="${request.static_url('ligando:static/js/peptide.js')}"></script>
-<script src="${request.static_url('ligando:static/js/aminoacid.js')}"></script>
-<script src="${request.static_url('ligando:static/js/ion.js')}"></script>
-<link REL="stylesheet" TYPE="text/css" HREF="${request.static_url('ligando:static/css/lorikeet.css')}">
 
 <script>
 
@@ -80,15 +81,13 @@ $(document).ready(function() {
             }},
             { data: "patient_id" ,
             "render": function ( data, type, row ) {
-                return "<input id='clickMe' type='button' value='spectra'></input>";
+                return "<input id='" + data + "' type='button' value='" + data + "' onclick='spectrumCall(&apos;" + data + "&apos;)'></input>";
             }}
         ]
     } );
 } );
 
-$(document).ready(function() {
-    document.getElementById("clickMe").onclick = function () { alert('hello!'); };
-});
+
 $(document).ready(function() {
     document.getElementById("test2_id").onclick = function () { alert('hello!'); };
 });
@@ -104,6 +103,8 @@ function spectrumCall(vari) {
     request.done(function(msg) {
         console.log(msg);
         //$("#doener").html(vari);
+        msg.fileName = vari.toString();
+        $("#doener").html("");
         $("#doener").specview(msg);
     });
 
