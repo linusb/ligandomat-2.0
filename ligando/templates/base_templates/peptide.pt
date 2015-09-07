@@ -39,12 +39,12 @@
             </tbody>
         </table>
      </div>
-     <div  style="float: left;">
-         <div id="pizza">this shall be updated</div>
-     </div>
   </div>
 </div>
 
+     <div  style="float: left;">
+         <div id="pizza">this shall be updated</div>
+     </div>
 
 <br>
 
@@ -111,9 +111,9 @@ function spectrumCall(vari) {
         msg.fileName = vari.toString();
         msg.width = 450;
         msg.height = 450;
-        msg.showOptionsTable = false;
+        msg.showOptionsTable = true;
         msg.showViewingOptions = true;
-        msg.showIonTable = false;
+        msg.showIonTable = true;
         $("#pizza").html("");
         $("#pizza").specview(msg);
     });
@@ -125,9 +125,10 @@ function spectrumCall(vari) {
 
 </script>
 
-<input id='test_id' type='button' value='test1' onclick="alert('hello!');"/>
-<input id='test2_id' type='button' value='test2'/>
-<input id='test3_id' type='button' value='test3' onclick="spectrumCall('whoa')"/>
+
+<!--?<input id='test_id' type='button' value='test1' onclick="alert('hello!');"/>-->
+<!--?<input id='test2_id' type='button' value='test2'/>-->
+<!--?<input id='test3_id' type='button' value='test3' onclick="spectrumCall('whoa')"/>-->
 
 
 
