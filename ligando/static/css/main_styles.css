@@ -101,8 +101,18 @@ body {
     color: rgb(165, 30, 55);
 }
 
-/*
 
+
+th.head{
+    white-space: nowrap
+}
+
+tbody {
+     font-size: 12px;
+     font-weight: normal;
+ }
+
+/*
 .boxed {
     background: white;
     border: 1px solid #DDD;
@@ -306,14 +316,13 @@ table.orphan_table tr.even {
 
 
 /*Canvas styles */
-/*
 .canvas-holder  {
     float:left;
     clear: both;
     width:33.3%;
     padding-bottom: 30px;
 }
-*/
+
 
 /* carousel indicators */
 .carousel-indicators li {

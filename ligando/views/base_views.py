@@ -166,14 +166,12 @@ def hla_page(request):
         query = query.filter(HlaType.hla_string == request.matchdict["hla"])
         statistic = json.dumps(query.all())
 
-        # TODO: this crashes if no correct HLA type is submitted! catch!
         #extract data for organ pie chart
         complete_sources = json.loads(sources)
-        organ_charts= get_chart_data(complete_sources)
-        organ_chart = organ_charts[0]
-        organ_flot = organ_charts[1]
+        organ_chart = get_chart_data(complete_sources)
 
-        #extract gene information
+
+        # extract gene information
         query = DBSession.query(Protein.name,
                                 Protein.organism,
                                 Protein.description,
@@ -181,16 +179,17 @@ def hla_page(request):
                                 Protein.gene_name)
 
         descriptor = request.matchdict["hla"].split("*")
-        hla_description =  descriptor[0] + descriptor[1].split(":")[0]
+        hla_description = descriptor[0] + descriptor[1].split(":")[0]
 
         query = query.filter(Protein.gene_name == "HLA-" + descriptor[0])
         query = query.filter(Protein.description.like("%" + hla_description + "%"))
-        gene_information =  json.dumps(query.all())
+        gene_information = json.dumps(query.all())
 
 
     except:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {"sources": sources, "hla": request.matchdict["hla"], "statistic": statistic, "organs": organ_chart, "genes": gene_information, "flot": organ_flot}
+    return {"sources": sources, "hla": request.matchdict["hla"], "statistic": statistic, "genes": gene_information,
+            "organ": organ_chart}
 
 
 @view_config(route_name='msrun', renderer='../templates/base_templates/msrun.pt', request_method="GET")
@@ -199,7 +198,7 @@ def msrun_page(request):
         query = DBSession.query(func.count(SpectrumHit.spectrum_hit_id).label("count_hits"),
                                 func.count(SpectrumHit.sequence.distinct()).label("count_pep"),
                                 func.count(Protein.name.distinct()).label("count_prot")
-        )
+                                )
 
         query = query.join(MsRun, SpectrumHit.ms_run_ms_run_id == MsRun.ms_run_id)
         query = query.join(t_spectrum_protein_map)

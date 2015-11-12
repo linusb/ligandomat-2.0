@@ -6,30 +6,29 @@ __author__ = 'Linus Backert'
 
 from sqlalchemy.orm import aliased
 
-#colors for all different organs
-colors={'blood':["#bf616a", "#cd848b"],
-            'brain':["#5B90BF", "#7ea8cd"],
-            'ovary':["#a3be8c", "#bed1ad"],
-            'kidney':["#d08770", "#dda797"],
-            'colon':["#ab7967", "#be9789"],
-            'lung':["#ebcb8b", "#f2deb5"],
-            'bladder':["#96b5b4", "#b4cac9"],
-            'bone marrow':["#8fa1b3", "#adbac7"],
-            'breast':["#b48ead","#c8acc3"],
-            'liver':["#473550", "#63496e"],
-            'cervix':["#65292f", "#8a3840"],
-            'smooth muscle':["#284967", "#36648c"],
-            'muscle':["#465b33", "#5f7c46"],
-            'pancreas':["#6c3423","#92472f"],
-            'skin':["#5c3e33","#7d5445"],
-            'spleen':["#7a5815", "#a6781c"],
-            'small intestine':["3b5453", "#507170"],
-            'heart, small intestine':["#3a4755","#4e6173"],
-            'myelon':["#361619", "#5b252a"],
-            'stomach':["#152737", "#24425c"],
-            'thyroid':["#26311c", "#3f522e"],
-            'thymus':["#31211b", "#52372d"]}
-
+# colors for all different organs
+colors = {'blood': "#bf616a",
+          'brain': "#5B90BF",
+          'ovary': "#a3be8c",
+          'kidney': "#d08770",
+          'colon': "#ab7967",
+          'lung': "#ebcb8b",
+          'bladder': "#96b5b4",
+          'bone marrow': "#8fa1b3",
+          'breast': "#b48ead",
+          'liver': "#473550",
+          'cervix': "#65292f",
+          'smooth muscle': "#284967",
+          'muscle': "#465b33",
+          'pancreas': "#6c3423",
+          'skin': "#5c3e33",
+          'spleen': "#7a5815",
+          'small intestine': "#507170",
+          'heart, small intestine': "#3a4755",
+          'myelon': "#361619",
+          'stomach': "#152737",
+          'thyroid': "#26311c",
+          'thymus': "#31211b"}
 
 
 # writes to log files
@@ -44,9 +43,9 @@ def log_writer(logfile, message):
             'ms_run_update_complete': 'ms_run_update_log_complete.txt',
             "blacklist": "blacklist_log.txt",
             "unblacklist": "unblacklist_log.txt",
-    }
-    with open("logs/"+logs[logfile], "a") as log:
-        log.write(str(message)+'\n')
+            }
+    with open("logs/" + logs[logfile], "a") as log:
+        log.write(str(message) + '\n')
     log.close()
 
 
@@ -136,6 +135,7 @@ def create_filter(query, parameter, request, sql_object, sql_parent, rule, like,
 
     return query
 
+
 # Standard error message
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
@@ -153,23 +153,21 @@ After you fix the problem, please restart the Pyramid application to
 try it again.
 """
 
+
+# Create organ chart needed data format for pie chart with flot
 def get_chart_data(sources):
     organ = []
-    organ_list =[]
-
     for source in sources:
         organ.append(source['organ'])
 
     organs = Counter(organ)
 
+    organ_array = []
+    for key, value in organs.iteritems():
+        organ_flot = {'label': key, 'data': value, 'color': colors[key]}
 
-    for key,value in organs.iteritems():
-        organ_json ={}
-        organ_json['label']=key
-        organ_json['value']=value
-        organ_json['color']= colors[key][0]
-        organ_json['highlight']= colors[key][1]
-        organ_list.append(organ_json)
-    organ_chart= json.dumps(organ_list)
+        organ_array.append(organ_flot)
 
-    return organ_chart
+    organ_array = json.dumps(organ_array)
+
+    return organ_array
