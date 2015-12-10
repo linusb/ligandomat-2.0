@@ -36,6 +36,7 @@ def main(global_config, **settings):
     config.add_route('unblacklist_msrun', '/unblacklist_msrun')
     # base pages
     config.add_route('peptide', '/peptide/{peptide}')
+    config.add_route('peptide_ajax', '/peptide_ajax/{peptide}')
     config.add_route('source', '/source/{source}')
     config.add_route('source_id', '/source_id/{source_id}')
     config.add_route('hla', '/hla/{hla}')

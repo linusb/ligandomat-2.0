@@ -3,6 +3,7 @@
 /logs/*
 *.pyc
 ligando.egg-info/*
+/lig-ve
 <<<<<<< HEAD
 *.sqlite
 =======
